@@ -1,0 +1,8 @@
+/target
+/build
+/vcpkg_installed
+/.vscode
+/install
+/installed
+/.cursor
+AGENTS.md
