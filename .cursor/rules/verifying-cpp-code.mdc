@@ -1,0 +1,11 @@
+---
+description: how to verify C++ code changes
+alwaysApply: false
+---
+
+- After modifying the C++ codebase, make sure to invoke the build on the current machine.
+- This project utilizes the CMake and CMakePresets.json file. make sure to only invoke the build via the `cmake --preset` set of commands on either the entire project or the affected target.
+so for instance if you added some files or modified CMake scripts, you should
+1. invoke the relevant cmake preset to generate the build (`cmake --preset=<preset>`) 
+2. invoke the relevant cmake preset on the affected target or the entire project (`cmake --build --preset=<preset> --target=<target>)
+- Do not run cmake in non preset mode

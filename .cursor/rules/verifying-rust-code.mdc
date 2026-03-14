@@ -1,0 +1,7 @@
+---
+description: How to verify rust code changes
+alwaysApply: false
+---
+
+- When changing rust code, make sure to verify the changes compile by running `cargo build` on the project or affected crates
+- If applicable, run `cargo test` as well to verify tests still pass
