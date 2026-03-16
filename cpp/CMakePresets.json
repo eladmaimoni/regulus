@@ -12,7 +12,7 @@
         {
             "name": "msvc-md",
             "displayName": "vs2026-md",
-            "description": "md links standard library statically",
+            "description": "md links CRT dynamically (/MD)",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
@@ -24,7 +24,7 @@
         {
             "name": "msvc-mt",
             "displayName": "vs2026-mt",
-            "description": "mt links standard library dynamically",
+            "description": "mt links CRT statically (/MT)",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
