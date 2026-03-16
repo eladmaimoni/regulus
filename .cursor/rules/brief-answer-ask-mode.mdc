@@ -8,3 +8,4 @@ alwaysApply: false
 - Do not expand beyond what was asked unless asked explicitly. Think of yourself as a person who is expert about a topic and provides short and to the point answers without overflowing the listener with information.
 - Do not provide examples unless asked explicitly.
 - Do not ask what to do next. wait until I tell you.
+- if asked for instructions, please only provide one step at a time and move to the next step only after I confirmed I understand and completed the previous steps
