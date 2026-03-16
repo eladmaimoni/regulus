@@ -1,9 +1,12 @@
-// #include <catch2/catch_session.hpp>
-int main() {
+#include <catch2/catch_session.hpp>
 
-    // initialize catch2
-    // Catch::Session session;
-    // int returnCode = session.run();
+int main(int argc, char* argv[]) {
+    Catch::Session session;
 
-    return 0;
+    int returnCode = session.applyCommandLine(argc, argv);
+    if (returnCode != 0) {
+        return returnCode;
+    }
+
+    return session.run();
 }

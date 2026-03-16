@@ -40,6 +40,9 @@ find_package(Catch2 CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
+include(CTest)
+include(Catch)
+
 add_subdirectory(src)
 
 # Project-level installs (once per project).

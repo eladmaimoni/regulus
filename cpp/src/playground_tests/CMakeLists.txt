@@ -12,12 +12,9 @@ target_link_libraries(
     playground_tests
     PRIVATE
     ccore
+    Catch2::Catch2
     regulus_default_compiler_flags
 )
 
-target_compile_definitions(
-   playground_tests
-   PRIVATE
-   CATCH_CONFIG_ENABLE_BENCHMARKING
-)
+catch_discover_tests(playground_tests)
 

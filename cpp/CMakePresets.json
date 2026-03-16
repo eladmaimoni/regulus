@@ -138,7 +138,40 @@
             ]
         }
     ],
-    "testPresets": [],
+    "testPresets": [
+        {
+            "name": "msvc-md-debug",
+            "configurePreset": "msvc-md",
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "msvc-md-release",
+            "configurePreset": "msvc-md",
+            "configuration": "RelWithDebInfo",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "msvc-mt-debug",
+            "configurePreset": "msvc-mt",
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "msvc-mt-release",
+            "configurePreset": "msvc-mt",
+            "configuration": "RelWithDebInfo",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ],
     "workflowPresets": [
         {
             "name": "windows-release-install",
