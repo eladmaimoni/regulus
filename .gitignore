@@ -1,7 +1,7 @@
 /target
+/rust/target
 /build
 /vcpkg_installed
 /.vscode
 /install
 /installed
-AGENTS.md
