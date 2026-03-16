@@ -1,0 +1,170 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "include": [
+        "CMakePresetsBase.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "msvc-md",
+            "displayName": "vs2026-md",
+            "description": "md links standard library statically",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "msvc145-x64-md"
+            ],
+            "generator": "Visual Studio 18 2026",
+            "cacheVariables": {}
+        },
+        {
+            "name": "msvc-mt",
+            "displayName": "vs2026-mt",
+            "description": "mt links standard library dynamically",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "msvc145-x64-mt"
+            ],
+            "generator": "Visual Studio 18 2026",
+            "cacheVariables": {
+                "REGULUS_SHARED": "ON"
+            }
+        },
+        {
+            "name": "clang-20-release",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "clang-20",
+                "ninja"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "clang-20-debug",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "clang-20",
+                "ninja"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "msvc-md-release",
+            "configurePreset": "msvc-md",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "msvc-md-debug",
+            "configurePreset": "msvc-md",
+            "jobs": 0,
+            "configuration": "Debug"
+        },
+        {
+            "name": "msvc-mt-release",
+            "configurePreset": "msvc-mt",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "msvc-mt-debug",
+            "configurePreset": "msvc-mt",
+            "jobs": 0,
+            "configuration": "Debug"
+        },
+        {
+            "name": "msvc-mt-debug-install",
+            "configurePreset": "msvc-mt",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo",
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "msvc-md-debug-install",
+            "configurePreset": "msvc-md",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo",
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "msvc-mt-release-install",
+            "configurePreset": "msvc-mt",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo",
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "msvc-md-release-install",
+            "configurePreset": "msvc-md",
+            "jobs": 0,
+            "configuration": "RelWithDebInfo",
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "clang-20-release-install",
+            "configurePreset": "clang-20-release",
+            "jobs": 0,
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "clang-20-debug-install",
+            "configurePreset": "clang-20-debug",
+            "jobs": 0,
+            "targets": [
+                "install"
+            ]
+        }
+    ],
+    "testPresets": [],
+    "workflowPresets": [
+        {
+            "name": "windows-release-install",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "msvc-md"
+                },
+                {
+                    "type": "build",
+                    "name": "msvc-md-release-install"
+                }
+            ]
+        },
+        {
+            "name": "windows-debug-install",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "msvc-mt"
+                },
+                {
+                    "type": "build",
+                    "name": "msvc-mt-debug-install"
+                }
+            ]
+        }
+    ]
+}

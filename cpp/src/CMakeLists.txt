@@ -1,0 +1,2 @@
+add_subdirectory(ccore)
+add_subdirectory(playground_tests)
