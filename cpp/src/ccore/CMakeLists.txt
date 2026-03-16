@@ -8,9 +8,18 @@ if(REGULUS_SHARED)
     set(REGULUS_LIBRARY_LINKAGE PRIVATE)
 endif()
 
+set_source_group(ccore ccore/ccore.hpp ccore.cpp)
+
 add_library(
     ccore
-    ${BY2_LIBRARY_TYPE}
-    ccore/ccore.hpp
-    ccore.cpp
+    ${REGULUS_LIBRARY_TYPE}
+    ${ccore}
 )
+
+target_link_libraries(
+    ccore
+    PRIVATE
+    regulus_default_compiler_flags
+)
+
+setup_target_includes_for_install(ccore ccore)
