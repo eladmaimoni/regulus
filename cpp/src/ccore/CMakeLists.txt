@@ -19,6 +19,8 @@ add_library(
 target_link_libraries(
     ccore
     PRIVATE
+    rcore_cxx
+    rcore::rcore
     regulus_default_compiler_flags
 )
 

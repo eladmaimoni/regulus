@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 4.3.0)
 
 set(LOG_SEPARATOR "===============================================================")
 project(regulus)
@@ -18,6 +18,8 @@ if(REGULUS_SHARED)
 
   # set_target_properties(alpha PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
+
+include(FetchContent)
 
 include(cmake/version_details.cmake)
 include(cmake/compiler_flags.cmake)
@@ -39,6 +41,24 @@ add_target_to_global_export_set(regulus_default_compiler_flags)
 find_package(Catch2 CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+
+FetchContent_Declare(
+    Corrosion
+    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(Corrosion)
+
+corrosion_import_crate(MANIFEST_PATH ../rust/src/rcore/Cargo.toml)
+if(NOT TARGET rcore)
+    message(FATAL_ERROR "rcore target not found")
+endif()
+
+corrosion_add_cxxbridge(rcore_cxx
+    CRATE rcore
+    FILES lib.rs
+)
+add_library(rcore::rcore ALIAS rcore)
 
 include(CTest)
 include(Catch)
