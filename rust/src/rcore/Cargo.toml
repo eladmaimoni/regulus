@@ -1,0 +1,9 @@
+[package]
+name = "rcore"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tracing = "0.1.44"
+tracing-perfetto = "0.1.5"
+tracing-subscriber = "0.3.23"
