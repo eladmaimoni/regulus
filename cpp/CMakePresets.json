@@ -32,7 +32,7 @@
             ],
             "generator": "Visual Studio 18 2026",
             "cacheVariables": {
-                "REGULUS_SHARED": "ON"
+                
             }
         },
         {

@@ -66,6 +66,24 @@ if(WIN32)
     # endif()
 endif()
 
+if(MSVC)
+    string(FIND "${CMAKE_MSVC_RUNTIME_LIBRARY}" "DLL" _is_dynamic_crt)
+    if(NOT _is_dynamic_crt EQUAL -1)
+        message(STATUS "we are using a dynamic CRT, making sure cxx internally (in its build.rs) links the debug version of the CRT")
+        corrosion_set_env_vars(rcore
+            "CFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
+            "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
+        )
+    else()
+        message(STATUS "we are using a static CRT, making sure cxx internally (in its build.rs) links the release version of the CRT")
+        corrosion_set_env_vars(rcore
+            "CFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
+            "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
+        )
+    endif()
+endif()
+
+
 corrosion_add_cxxbridge(rcore_cxx
     CRATE rcore
     FILES lib.rs
