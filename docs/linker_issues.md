@@ -1,46 +1,77 @@
 # Known Linker Issues
 
-## Windows
+## Windows MSVC: CRT Linking with Rust Static Libraries
 
-First let's understand the flags responsible for linking the crt on msvc:
+### Background: /MD /MDd /MT /MTd
 
-### /MD /MDd /MT /MTd
-these are compiler flags (not linker flags!) that affect a few other things. for example /MDd does 2 things
-- Defines _DEBUG and _DLL preprocessor macros (affecting _ITERATOR_DEBUG_LEVEL etc.)
-- Embeds a /DEFAULTLIB:msvcrtd directive into the resulting .obj file, telling the linker to link this obj using a a debug version of the dynamic crt (dll).
+These are **compiler** flags (not linker flags). They affect two things at compile time:
 
-### /DEFAULTLIB
-this is a linker flag that might be specified by various targets (static libraries or binaries).
-each target may specify a different thing. so for instance rust static libraries specify /DEFAUTLIB:msvcrt which means the library wishes to link the release version of the dynamic crt (MultithreadedDLL), equivalent to /MD.
-when various targets specify different /DEFAULTLIB:<variant>, the linker may resolve those conflicts and decide on a different variant.
-for example, if we have a C++ exe that links at debug version of the crt (/MDd that implies /DEFAUTLIB:msvcrtd) and rust library specifying a release version (/DEFAUTLIB:msvcrt) the linker might decide to simply link the debug version.
-However, If we have a C++ exe that links the crt statically (/MT or /MTd), the linker won't be able to resolve those conflicts:
+1. Define preprocessor macros that control debug/release behavior:
+   - `/MDd` defines `_DEBUG` and `_DLL`, setting `_ITERATOR_DEBUG_LEVEL=2`
+   - `/MD` defines `_DLL` only, setting `_ITERATOR_DEBUG_LEVEL=0`
+   - `/MTd` and `/MT` are similar but for static CRT linkage
+2. Embed a `/DEFAULTLIB:<variant>` directive into each `.obj` file, telling the linker which CRT variant the object expects:
 
-So in fact, on windows, rust (from version 1.79 according to [this PR](https://github.com/rust-lang/rust/pull/122268)) does not force the user to use a specific crt.
+| Flag   | Embedded directive       | CRT variant             |
+|--------|--------------------------|-------------------------|
+| `/MD`  | `/DEFAULTLIB:msvcrt`     | Dynamic release         |
+| `/MDd` | `/DEFAULTLIB:msvcrtd`    | Dynamic debug           |
+| `/MT`  | `/DEFAULTLIB:libcmt`     | Static release          |
+| `/MTd` | `/DEFAULTLIB:libcmtd`    | Static debug            |
 
-## CXX and CC crates
-so there is not real issue with rust static library specifying different linker flags from a C++ dll / exe that links it.
-however, if rust has a build.rs file that compiles some C++ code and specifes /MD, this will result in conflicts since /MD also affects some other compilers options such as preprocessor variables:
+### Background: /DEFAULTLIB
+
+`/DEFAULTLIB` is a linker directive (often embedded in `.obj` and `.lib` files, not passed on the command line).
+When multiple objects specify conflicting `/DEFAULTLIB` variants within the same CRT family (e.g., `msvcrt` vs `msvcrtd`),
+the linker can usually resolve the conflict with a warning (`LNK4098`).
+However, mixing static and dynamic CRT families (e.g., `msvcrt` with `libcmt`) is unsupported by Microsoft and will typically fail.
+
+### How Rust links the CRT
+
+Since **Rust 1.79** ([PR #122268](https://github.com/rust-lang/rust/pull/122268)), Rust embeds `/DEFAULTLIB:msvcrt`
+(or `/DEFAULTLIB:libcmt` if `+crt-static` target feature is set) into its objects.
+Because this is a `/DEFAULTLIB` directive (not an explicit lib), it can be overridden by the consuming linker.
+
+This means Rust itself does **not** force a specific CRT variant — the final executable's CRT choice is determined
+by the C++ compiler flags and the linker's conflict resolution.
+
+### The actual problem: C++ objects compiled by the `cxx` crate
+
+The `cxx` crate (dependency, not `cxx-build`) has an internal `build.rs` that uses the `cc` crate to compile
+C++ runtime code (`cxx.cc` — implementations of `rust::String`, `rust::Vec`, etc.).
+These compiled `.obj` files are embedded inside the Rust static library (`rcore.lib`).
+
+By default, the `cc` crate compiles with `/MD` (dynamic release CRT). This embeds two things into those objects:
+- `RuntimeLibrary = MD_DynamicRelease`
+- `_ITERATOR_DEBUG_LEVEL = 0`
+
+When linking a C++ Debug executable (compiled with `/MDd`), the linker detects a **metadata mismatch**:
+
 ```
-rcore.lib(15a3702a9d40a852-cxx.o) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2'
-rcore.lib(15a3702a9d40a852-cxx.o) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug'
+rcore.lib(cxx.o) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2'
+rcore.lib(cxx.o) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug'
 ```
-this error might be misleading at first since it may lead you to believe this is a linker flag issue.
-however, this problem is that cxx crate (which uses cc crate) compiles some C++ code in its internal build.rs and embeds that into the rust artifact.
-this C++ code (mostly things that interop with standard C++ types) are compiled with /MD by default.
-While we can mix /DEFAULTLIB flags, we can't mix /MD with contradiciting compiler flags.
-So here, the workaround is to tell cxx crate or cc crate to explicitly use the right flag using environment variables:
-```
+
+This is **not** a linker flag conflict — it is a compile-time ABI mismatch baked into the `.obj` files.
+The `/DEFAULTLIB` conflict can be resolved by the linker, but `_ITERATOR_DEBUG_LEVEL` and `RuntimeLibrary`
+metadata mismatches cannot — the linker refuses to link objects compiled with incompatible settings.
+
+### Workaround
+
+The `cc` crate reads `CFLAGS` and `CXXFLAGS` from the environment. By setting these before cargo builds,
+we can make the C++ objects inside the Rust library match the consuming project's CRT configuration.
+
+Using [Corrosion](https://github.com/corrosion-rs/corrosion) in CMake:
+
+```cmake
 if(MSVC)
     string(FIND "${CMAKE_MSVC_RUNTIME_LIBRARY}" "DLL" _is_dynamic_crt)
     if(NOT _is_dynamic_crt EQUAL -1)
-        message(STATUS "we are using a dynamic CRT, making sure cxx internally (in its build.rs) links the debug version of the CRT")
         corrosion_set_env_vars(rcore
             "CFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
             "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
         )
     else()
-        message(STATUS "we are using a static CRT, making sure cxx internally (in its build.rs) links the release version of the CRT")
         corrosion_set_env_vars(rcore
             "CFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
             "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
@@ -49,5 +80,30 @@ if(MSVC)
 endif()
 ```
 
-see [here](https://github.com/dtolnay/cxx/issues/880) for reference. 
+This uses generator expressions so the correct flag is applied per build configuration
+(Debug vs Release) in multi-config generators like Visual Studio.
 
+### Windows system library dependencies
+
+When linking a Rust `staticlib` into a C++ executable, Windows system libraries used by Rust dependencies
+are not automatically linked. You must add them explicitly:
+
+```cmake
+if(WIN32)
+    target_link_libraries(rcore INTERFACE bcrypt advapi32)
+endif()
+```
+
+Common system libraries Rust crates may need: `bcrypt`, `advapi32`, `userenv`, `ws2_32`, `ntdll`.
+
+### Requirements
+
+- **Rust >= 1.79** for the `/DEFAULTLIB`-based CRT linking (otherwise CRT is hardcoded and cannot be overridden).
+- **Rust >= 1.83** recommended (fixes edge cases with CRT override when cargo explicitly inserts `msvcrt.lib`).
+
+### References
+
+- [CXX issue #880: Document how to get a MSVCRTD-based debug-build LIB on Windows](https://github.com/dtolnay/cxx/issues/880)
+- [Rust PR #122268: Link MSVC default lib in core](https://github.com/rust-lang/rust/pull/122268)
+- [Rust issue #107570: The MSVC CRT library is not overrideable by other build systems](https://github.com/rust-lang/rust/issues/107570)
+- [Rust libs-team issue #211: Windows MSVC CRT linking](https://github.com/rust-lang/libs-team/issues/211)
