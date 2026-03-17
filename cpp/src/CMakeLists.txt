@@ -1,2 +1,5 @@
 add_subdirectory(ccore)
-add_subdirectory(playground_tests)
+
+if(REGULUS_WITH_TESTS)
+    add_subdirectory(playground_tests)
+endif()
