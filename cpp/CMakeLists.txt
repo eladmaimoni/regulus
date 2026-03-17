@@ -54,6 +54,18 @@ if(NOT TARGET rcore)
     message(FATAL_ERROR "rcore target not found")
 endif()
 
+if(WIN32)
+    # On Windows, we need to link to the bcrypt libraries
+    # to get the necessary functionality for the rcore crate.
+    target_link_libraries(rcore INTERFACE bcrypt)
+    # get_target_property(_rcore_type rcore TYPE)
+    # if(_rcore_type STREQUAL "STATIC_LIBRARY")
+    #     message(STATUS "rcore target is a static library")
+    # else()
+    #     message(STATUS "rcore target is not a static library: ${_rcore_type}")
+    # endif()
+endif()
+
 corrosion_add_cxxbridge(rcore_cxx
     CRATE rcore
     FILES lib.rs
