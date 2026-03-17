@@ -18,10 +18,12 @@ add_library(
 
 target_link_libraries(
     ccore
-    PRIVATE
-    rcore_cxx
-    rcore::rcore
+    PUBLIC
+    $<BUILD_INTERFACE:rcore_cxx>
+    $<BUILD_INTERFACE:rcore::rcore>
     regulus_default_compiler_flags
 )
 
 setup_target_includes_for_install(ccore ccore)
+install_target_artifacts(ccore)
+generate_pkgconfig(ccore)

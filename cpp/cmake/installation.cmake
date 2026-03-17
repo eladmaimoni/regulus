@@ -60,7 +60,7 @@ function(setup_target_for_find_package
     )
 endfunction()
 
-function(add_target_to_global_export_set
+function(install_target_artifacts
     target_name
 )
     # when installing,
@@ -82,7 +82,7 @@ function(add_target_to_global_export_set
 
     install(
         TARGETS ${target_name}
-        EXPORT ${export_set} # when installing, generate a "targets" file. clients can include this
+        # EXPORT ${export_set} # when installing, generate a "targets" file. cmake clients can include this
 
         # DESTINATION lib/$<CONFIG>
         ARCHIVE DESTINATION ${lib_dest}
@@ -113,7 +113,6 @@ function(add_target_to_global_export_set
     # PDB FILES
     if(target_type STREQUAL STATIC_LIBRARY)
         install(
-
             # FILES $<TARGET_COMPILE_PDB_FILE:${target_name}> # https://gitlab.kitware.com/cmake/cmake/-/issues/16935
             FILES $<TARGET_FILE_DIR:${target_name}>/${target_name}.pdb
             DESTINATION ${lib_dest}
@@ -148,7 +147,7 @@ function(setup_target_for_install
 )
     setup_target_includes_for_install(${target_name} ${public_include_folder})
     setup_target_for_find_package(${target_name})
-    add_target_to_global_export_set(${target_name})
+    install_target_artifacts(${target_name})
 endfunction()
 
 # Main: generate and install a pkg-config file for a CMake target

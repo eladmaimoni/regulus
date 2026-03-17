@@ -38,7 +38,7 @@ include(GNUInstallDirs)
 # the export set that collects all targets to be exported
 # using the install(TARGETS ... EXPORT ...) command
 set(export_set "${PROJECT_NAME}_exported_targets")
-add_target_to_global_export_set(regulus_default_compiler_flags)
+install_target_artifacts(regulus_default_compiler_flags)
 
 # Use GNU install dirs for sensible defaults (CMAKE_INSTALL_LIBDIR / INCLUDEDIR)
 find_package(Catch2 CONFIG REQUIRED)
