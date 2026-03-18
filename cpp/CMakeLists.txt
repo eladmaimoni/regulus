@@ -55,8 +55,8 @@ include(Catch)
 add_subdirectory(src)
 
 # Project-level installs (once per project).
-install(EXPORT "${export_set}"
-  NAMESPACE "${PROJECT_NAME}::"
-  FILE "${PROJECT_NAME}Targets.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-)
+# install(EXPORT "${export_set}"
+#   NAMESPACE "${PROJECT_NAME}::"
+#   FILE "${PROJECT_NAME}Targets.cmake"
+#   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+# )

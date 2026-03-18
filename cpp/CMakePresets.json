@@ -11,7 +11,7 @@
     "configurePresets": [
         {
             "name": "msvc-md",
-            "displayName": "vs2026-md",
+            "displayName": "msvc with dynamic CRT",
             "description": "md links CRT dynamically (/MD)",
             "inherits": [
                 "basic_paths",
@@ -23,7 +23,7 @@
         },
         {
             "name": "msvc-mt",
-            "displayName": "vs2026-mt",
+            "displayName": "msvc with static CRT",
             "description": "mt links CRT statically (/MT)",
             "inherits": [
                 "basic_paths",
@@ -95,8 +95,8 @@
             ]
         },
         {
-            "name": "msvc-md-debug-install",
-            "configurePreset": "msvc-md",
+            "name": "msvc-mt-release-install",
+            "configurePreset": "msvc-mt",
             "jobs": 0,
             "configuration": "RelWithDebInfo",
             "targets": [
@@ -104,8 +104,8 @@
             ]
         },
         {
-            "name": "msvc-mt-release-install",
-            "configurePreset": "msvc-mt",
+            "name": "msvc-md-debug-install",
+            "configurePreset": "msvc-md",
             "jobs": 0,
             "configuration": "RelWithDebInfo",
             "targets": [
