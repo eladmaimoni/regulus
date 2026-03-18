@@ -11,6 +11,7 @@ tracing-subscriber = "0.3.23"
 
 [build-dependencies]
 cxx-build = "1.0.194"
+build_utils = { path = "../build_utils" }
 
 [lib]
 crate-type = ["lib", "staticlib"]

@@ -10,3 +10,4 @@ rcore = { path = "../rcore" }
 [build-dependencies]
 cxx-build = "1.0.194"
 pkg-config = "0.3"
+build_utils = { path = "../build_utils" }
