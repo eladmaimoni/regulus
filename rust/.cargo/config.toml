@@ -1,0 +1,50 @@
+# ── MSVC Static CRT Configuration ────────────────────────────────────────
+#
+# Default config is optimised for debug builds (`cargo test`, `cargo build`,
+# `cargo check`) so they just work without extra flags.
+#
+# For release builds use the aliases: `cargo xbuild-release`, `cargo xtest-release`.
+# These override rustflags and CFLAGS to use the release CRT (/MT + libcmt).
+#
+# +crt-static tells Rust to link the static CRT (/MT family).
+# The linker args swap the default libcmt (release) for libcmtd (debug).
+#
+# CFLAGS/CXXFLAGS target-qualified env vars force the cc crate (including
+# inside cxx's own build.rs) to compile C++ with /MTd. The cc crate checks
+# CFLAGS_<triple> before CFLAGS, so non-Windows targets are unaffected.
+# https://docs.rs/cc/latest/cc/#external-configuration-via-environment-variables
+#
+# See docs/linker_issues.md for full explanation.
+
+[target.x86_64-pc-windows-msvc]
+rustflags = [
+    "-C", "target-feature=+crt-static",
+    "-C", "link-arg=/nodefaultlib:libcmt",
+    "-C", "link-arg=/defaultlib:libcmtd",
+]
+
+# force = false: only set when not already present in the environment.
+# For release builds, the alias's --config override sets these to /MT
+# in the parent cargo process, which propagates to nested cmake/Corrosion
+# cargo invocations via environment inheritance.
+[env]
+CFLAGS_x86_64_pc_windows_msvc  = { value = "/MTd", force = false }
+CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = false }
+
+[alias]
+rbuild = [
+    "build", "--release",
+    "--config", "target.'x86_64-pc-windows-msvc'.rustflags = ['-C', 'target-feature=+crt-static']",
+    "--config", "env.CFLAGS_x86_64_pc_windows_msvc.value = '/MT'",
+    "--config", "env.CFLAGS_x86_64_pc_windows_msvc.force = true",
+    "--config", "env.CXXFLAGS_x86_64_pc_windows_msvc.value = '/MT'",
+    "--config", "env.CXXFLAGS_x86_64_pc_windows_msvc.force = true",
+]
+rtest = [
+    "test", "--release",
+    "--config", "target.'x86_64-pc-windows-msvc'.rustflags = ['-C', 'target-feature=+crt-static']",
+    "--config", "env.CFLAGS_x86_64_pc_windows_msvc.value = '/MT'",
+    "--config", "env.CFLAGS_x86_64_pc_windows_msvc.force = true",
+    "--config", "env.CXXFLAGS_x86_64_pc_windows_msvc.value = '/MT'",
+    "--config", "env.CXXFLAGS_x86_64_pc_windows_msvc.force = true",
+]

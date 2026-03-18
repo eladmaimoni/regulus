@@ -69,16 +69,29 @@ fn build_and_link_ccore() {
         panic!("failed to run cmake configure");
     }
 
-    // run cmake build
+    // Build only ccore (--target overrides the preset's default ALL target)
     let status = std::process::Command::new("cmake")
         .current_dir(&cpp_root)
         .arg("--build")
         .arg(format!("--preset={}", cmake_presets.build))
+        .arg("--target=ccore")
         .status()
         .expect("failed to run cmake build");
 
     if !status.success() {
         panic!("failed to run cmake build");
+    }
+
+    // Install using the install preset (targets: ["install"])
+    let status = std::process::Command::new("cmake")
+        .current_dir(&cpp_root)
+        .arg("--build")
+        .arg(format!("--preset={}", cmake_presets.install))
+        .status()
+        .expect("failed to run cmake install"); 
+
+    if !status.success() {
+        panic!("failed to run cmake install");
     }
 
     let pkg_config_dir = get_pkg_config_dir(&cmake_install_dir, target_build_profile);
@@ -92,15 +105,10 @@ fn build_and_link_ccore_cxxbridge() {
     let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
     let mut build = cxx_build::bridge("src/lib.rs");
     build.include(cmake_install_dir.join("include"));
-    if cfg!(target_env = "msvc") {
-        build.static_crt(true);
-    }
-   
     build.compile("ccore_bridge_cxx");
 }
 
 fn main() {
     build_and_link_ccore();
     build_and_link_ccore_cxxbridge();
-
 }

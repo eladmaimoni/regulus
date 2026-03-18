@@ -14,9 +14,9 @@ pub enum TargetBuildProfile {
 
 #[derive(Debug)]
 pub struct CMakePresets {
-    /// The CMake preset to use for this build (e.g. "vs2022r-install")
     pub(crate) configure: &'static str,
     pub(crate) build: &'static str,
+    pub(crate) install: &'static str,
 }
 
 pub const CMAKE_INSTALLED_DIR: &str = "installed";
@@ -68,14 +68,16 @@ pub fn get_cargo_target_build_profile() -> TargetBuildProfile {
     }
 }
 
-const WINDOWS_DEFAULT_DEBUG_PRESET : CMakePresets = CMakePresets {
+const WINDOWS_DEFAULT_DEBUG_PRESET: CMakePresets = CMakePresets {
     configure: "msvc-mt",
-    build: "msvc-mt-debug-install",
+    build: "msvc-mt-debug",
+    install: "msvc-mt-debug-install",
 };
 
-const WINDOWS_DEFAULT_RELEASE_PRESET : CMakePresets = CMakePresets {
+const WINDOWS_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
     configure: "msvc-mt",
-    build: "msvc-mt-release-install",
+    build: "msvc-mt-release",
+    install: "msvc-mt-release-install",
 };
 
 
