@@ -6,6 +6,7 @@ pub enum TargetOS {
     MacOS,
 }
 
+#[derive(PartialEq, Eq, Debug, Clone, Copy)]
 pub enum TargetBuildProfile {
     Debug,
     Release,
@@ -92,5 +93,12 @@ pub fn get_cmake_presets(target_os: TargetOS, target_build_profile: TargetBuildP
         TargetOS::MacOS => {
             panic!("MacOS is not supported yet");
         }
+    }
+}
+
+pub fn get_pkg_config_dir(cmake_install_path: &std::path::Path, build_profile: TargetBuildProfile) -> std::path::PathBuf {
+    match build_profile {
+        TargetBuildProfile::Debug => cmake_install_path.join("debug/lib/pkgconfig"),
+        TargetBuildProfile::Release => cmake_install_path.join("lib/pkgconfig"),
     }
 }

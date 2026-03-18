@@ -3,14 +3,17 @@
 
 #[path = "build/ccore_build_helper.rs"]
 mod ccore_build_helper;
+#[path = "build/pkg_config_parsing.rs"]
+mod pkg_config_parsing;
 
 use ccore_build_helper::*;
+use pkg_config_parsing::*;
 
 fn log_debug(
     cmake_presets: &CMakePresets,
     cpp_root: &std::path::Path,
-    cmake_install_dir: &str,
-    vcpkg_install_dir: &str,
+    cmake_install_dir: &std::path::Path,
+    vcpkg_install_dir: &std::path::Path,
 ) {
     // note that cargo does not allow multiline strings in println!
 
@@ -27,7 +30,9 @@ fn log_debug(
     );
 }
 
-fn main() {
+
+
+fn build_and_link_ccore() {
     let target_os = get_target_os(std::env::var("CARGO_CFG_TARGET_OS").unwrap().as_str());
     let target_build_profile = get_cargo_target_build_profile();
     let cmake_presets = get_cmake_presets(target_os, target_build_profile);
@@ -35,14 +40,8 @@ fn main() {
 
     // determine where to place cmake installed and vcpkg installed files
     let cargo_out_dir = get_cargo_out_dir();
-    let cmake_install_dir = cargo_out_dir
-        .join(CMAKE_INSTALLED_DIR)
-        .display()
-        .to_string();
-    let vcpkg_install_dir = cargo_out_dir
-        .join(VCPKG_INSTALLED_DIR)
-        .display()
-        .to_string();
+    let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
+    let vcpkg_install_dir = cargo_out_dir.join(VCPKG_INSTALLED_DIR);
 
     log_debug(
         &cmake_presets,
@@ -55,8 +54,14 @@ fn main() {
     let status = std::process::Command::new("cmake")
         .current_dir(&cpp_root)
         .arg(format!("--preset={}", cmake_presets.configure))
-        .arg(format!("-DCMAKE_INSTALL_PREFIX={}", cmake_install_dir))
-        .arg(format!("-DVCPKG_INSTALLED_DIR={}", vcpkg_install_dir))
+        .arg(format!(
+            "-DCMAKE_INSTALL_PREFIX={}",
+            cmake_install_dir.display().to_string()
+        ))
+        .arg(format!(
+            "-DVCPKG_INSTALLED_DIR={}",
+            vcpkg_install_dir.display().to_string()
+        ))
         .status()
         .expect("failed to run cmake configure");
 
@@ -75,4 +80,13 @@ fn main() {
     if !status.success() {
         panic!("failed to run cmake build");
     }
+
+    let pkg_config_dir = get_pkg_config_dir(&cmake_install_dir, target_build_profile);
+
+    emit_pkg_config_link_data(&pkg_config_dir); // emit the link data to the cargo build script
+    
+}
+
+fn main() {
+    build_and_link_ccore();
 }
