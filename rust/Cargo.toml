@@ -1,4 +1,4 @@
 
 [workspace]
-members = ["src/rcore", "src/ccore_bridge", "src/build_utils"]
+members = ["src/rcore", "src/ccore_bridge"]
 resolver = "3"
