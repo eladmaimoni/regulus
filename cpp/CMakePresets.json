@@ -89,7 +89,7 @@
             "name": "msvc-mt-debug-install",
             "configurePreset": "msvc-mt",
             "jobs": 0,
-            "configuration": "RelWithDebInfo",
+            "configuration": "Debug",
             "targets": [
                 "install"
             ]
