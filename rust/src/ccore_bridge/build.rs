@@ -87,6 +87,20 @@ fn build_and_link_ccore() {
     
 }
 
+fn build_and_link_ccore_cxxbridge() {
+    let cargo_out_dir = get_cargo_out_dir();
+    let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
+    let mut build = cxx_build::bridge("src/lib.rs");
+    build.include(cmake_install_dir.join("include"));
+    if cfg!(target_env = "msvc") {
+        build.static_crt(true);
+    }
+   
+    build.compile("ccore_bridge_cxx");
+}
+
 fn main() {
     build_and_link_ccore();
+    build_and_link_ccore_cxxbridge();
+
 }
