@@ -58,6 +58,7 @@ dependencies = [
  "cxx",
  "cxx-build",
  "pkg-config",
+ "rcore",
 ]
 
 [[package]]
