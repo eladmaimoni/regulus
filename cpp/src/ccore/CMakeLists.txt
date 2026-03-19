@@ -21,6 +21,7 @@ target_link_libraries(
     PUBLIC
     $<BUILD_INTERFACE:rcore_cxx>
     $<BUILD_INTERFACE:rcore::rcore>
+    spdlog::spdlog
     regulus_default_compiler_flags
 )
 

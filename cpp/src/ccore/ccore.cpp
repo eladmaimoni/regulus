@@ -1,5 +1,6 @@
 #include "ccore/ccore.hpp"
 #include "rcore_cxx/lib.h"
+#include <spdlog/spdlog.h>
 
 namespace rg
 {
@@ -7,6 +8,7 @@ namespace rg
     {
         initialize_tracing();
         trace_info("hi from cpp");
+        spdlog::info("hi from cpp spdlog");
         return a + b;
     }
 }
