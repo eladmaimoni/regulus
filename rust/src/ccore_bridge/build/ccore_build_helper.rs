@@ -80,18 +80,28 @@ const WINDOWS_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
     install: "msvc-mt-release-install",
 };
 
+const LINUX_DEFAULT_DEBUG_PRESET: CMakePresets = CMakePresets {
+    configure: "clang-20-debug",
+    build: "clang-20-debug",
+    install: "clang-20-debug-install",
+};
+
+const LINUX_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
+    configure: "clang-20-release",
+    build: "clang-20-release",
+    install: "clang-20-release-install",
+};
 
 pub fn get_cmake_presets(target_os: TargetOS, target_build_profile: TargetBuildProfile) -> CMakePresets {
     match target_os {
-        TargetOS::Windows => {
-            match target_build_profile {
-                TargetBuildProfile::Debug => WINDOWS_DEFAULT_DEBUG_PRESET,
-                TargetBuildProfile::Release => WINDOWS_DEFAULT_RELEASE_PRESET,
-            }
-        }
-        TargetOS::Linux => {
-            panic!("Linux is not supported yet");
-        }
+        TargetOS::Windows => match target_build_profile {
+            TargetBuildProfile::Debug => WINDOWS_DEFAULT_DEBUG_PRESET,
+            TargetBuildProfile::Release => WINDOWS_DEFAULT_RELEASE_PRESET,
+        },
+        TargetOS::Linux => match target_build_profile {
+            TargetBuildProfile::Debug => LINUX_DEFAULT_DEBUG_PRESET,
+            TargetBuildProfile::Release => LINUX_DEFAULT_RELEASE_PRESET,
+        },
         TargetOS::MacOS => {
             panic!("MacOS is not supported yet");
         }
