@@ -58,6 +58,30 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
+        },
+        {
+            "name": "clang-20-aarch64-release",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "clang-20-aarch64",
+                "ninja"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "clang-20-aarch64-debug",
+            "inherits": [
+                "basic_paths",
+                "vcpkg",
+                "clang-20-aarch64",
+                "ninja"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         }
     ],
     "buildPresets": [
@@ -142,6 +166,32 @@
         {
             "name": "clang-20-debug-install",
             "configurePreset": "clang-20-debug",
+            "jobs": 0,
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "clang-20-aarch64-release",
+            "configurePreset": "clang-20-aarch64-release",
+            "jobs": 0
+        },
+        {
+            "name": "clang-20-aarch64-debug",
+            "configurePreset": "clang-20-aarch64-debug",
+            "jobs": 0
+        },
+        {
+            "name": "clang-20-aarch64-release-install",
+            "configurePreset": "clang-20-aarch64-release",
+            "jobs": 0,
+            "targets": [
+                "install"
+            ]
+        },
+        {
+            "name": "clang-20-aarch64-debug-install",
+            "configurePreset": "clang-20-aarch64-debug",
             "jobs": 0,
             "targets": [
                 "install"
@@ -246,6 +296,32 @@
                 {
                     "type": "build",
                     "name": "clang-20-debug-install"
+                }
+            ]
+        },
+        {
+            "name": "linux-aarch64-release-install",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-20-aarch64-release"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-20-aarch64-release-install"
+                }
+            ]
+        },
+        {
+            "name": "linux-aarch64-debug-install",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-20-aarch64-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-20-aarch64-debug-install"
                 }
             ]
         }
