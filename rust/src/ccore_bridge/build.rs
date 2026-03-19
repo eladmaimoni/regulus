@@ -34,8 +34,9 @@ fn log_debug(
 
 fn build_and_link_ccore() {
     let target_os = get_target_os(std::env::var("CARGO_CFG_TARGET_OS").unwrap().as_str());
+    let target_arch = get_target_arch(std::env::var("CARGO_CFG_TARGET_ARCH").unwrap().as_str());
     let target_build_profile = get_cargo_target_build_profile();
-    let cmake_presets = get_cmake_presets(target_os, target_build_profile);
+    let cmake_presets = get_cmake_presets(target_os, target_arch, target_build_profile);
     let cpp_root = get_cpp_project_root_directory();
 
     // determine where to place cmake installed and vcpkg installed files

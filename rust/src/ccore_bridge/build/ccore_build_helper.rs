@@ -7,6 +7,12 @@ pub enum TargetOS {
 }
 
 #[derive(PartialEq, Eq, Debug, Clone, Copy)]
+pub enum TargetArch {
+    X86_64,
+    Aarch64,
+}
+
+#[derive(PartialEq, Eq, Debug, Clone, Copy)]
 pub enum TargetBuildProfile {
     Debug,
     Release,
@@ -55,8 +61,12 @@ pub fn get_cargo_out_dir() -> std::path::PathBuf {
     std::path::PathBuf::from(out_dir)
 }
 
-pub fn get_cargo_target_build_architecture() -> std::string::String {
-    std::env::var("CARGO_CFG_TARGET_ARCH").expect("CARGO_CFG_TARGET_ARCH is not set")
+pub fn get_target_arch(target_arch: &str) -> TargetArch {
+    match target_arch {
+        "x86_64" => TargetArch::X86_64,
+        "aarch64" => TargetArch::Aarch64,
+        _ => panic!("Unsupported target architecture: {}", target_arch),
+    }
 }
 
 pub fn get_cargo_target_build_profile() -> TargetBuildProfile {
@@ -92,18 +102,41 @@ const LINUX_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
     install: "clang-20-release-install",
 };
 
-pub fn get_cmake_presets(target_os: TargetOS, target_build_profile: TargetBuildProfile) -> CMakePresets {
-    match target_os {
-        TargetOS::Windows => match target_build_profile {
+const LINUX_AARCH64_DEBUG_PRESET: CMakePresets = CMakePresets {
+    configure: "clang-20-aarch64-debug",
+    build: "clang-20-aarch64-debug",
+    install: "clang-20-aarch64-debug-install",
+};
+
+const LINUX_AARCH64_RELEASE_PRESET: CMakePresets = CMakePresets {
+    configure: "clang-20-aarch64-release",
+    build: "clang-20-aarch64-release",
+    install: "clang-20-aarch64-release-install",
+};
+
+pub fn get_cmake_presets(
+    target_os: TargetOS,
+    target_arch: TargetArch,
+    target_build_profile: TargetBuildProfile,
+) -> CMakePresets {
+    match (target_os, target_arch) {
+        (TargetOS::Windows, TargetArch::X86_64) => match target_build_profile {
             TargetBuildProfile::Debug => WINDOWS_DEFAULT_DEBUG_PRESET,
             TargetBuildProfile::Release => WINDOWS_DEFAULT_RELEASE_PRESET,
         },
-        TargetOS::Linux => match target_build_profile {
+        (TargetOS::Linux, TargetArch::X86_64) => match target_build_profile {
             TargetBuildProfile::Debug => LINUX_DEFAULT_DEBUG_PRESET,
             TargetBuildProfile::Release => LINUX_DEFAULT_RELEASE_PRESET,
         },
-        TargetOS::MacOS => {
+        (TargetOS::Linux, TargetArch::Aarch64) => match target_build_profile {
+            TargetBuildProfile::Debug => LINUX_AARCH64_DEBUG_PRESET,
+            TargetBuildProfile::Release => LINUX_AARCH64_RELEASE_PRESET,
+        },
+        (TargetOS::MacOS, _) => {
             panic!("MacOS is not supported yet");
+        }
+        (os, arch) => {
+            panic!("Unsupported OS/architecture combination: {:?}/{:?}", os, arch);
         }
     }
 }
