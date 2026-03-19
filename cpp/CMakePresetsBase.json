@@ -120,7 +120,9 @@
             },
             "cacheVariables": {
                 "VCPKG_TARGET_TRIPLET": "aarch64-linux-clang-20",
-                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/vcpkg_scripts/toolchains/clang-20-toolchain-aarch64.cmake"
+                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/vcpkg_scripts/toolchains/clang-20-toolchain-aarch64.cmake",
+                "Rust_CARGO_TARGET": "aarch64-unknown-linux-gnu",
+                "REGULUS_WITH_TESTS": "OFF"
             }
         }
     ]
