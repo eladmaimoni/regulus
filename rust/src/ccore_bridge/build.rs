@@ -32,14 +32,13 @@ fn log_debug(
 
 
 
-fn build_and_link_ccore() {
+fn build_ccore() {
     let target_os = get_target_os(std::env::var("CARGO_CFG_TARGET_OS").unwrap().as_str());
     let target_arch = get_target_arch(std::env::var("CARGO_CFG_TARGET_ARCH").unwrap().as_str());
     let target_build_profile = get_cargo_target_build_profile();
     let cmake_presets = get_cmake_presets(target_os, target_arch, target_build_profile);
     let cpp_root = get_cpp_project_root_directory();
 
-    // determine where to place cmake installed and vcpkg installed files
     let cargo_out_dir = get_cargo_out_dir();
     let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
     let vcpkg_install_dir = cargo_out_dir.join(VCPKG_INSTALLED_DIR);
@@ -51,7 +50,6 @@ fn build_and_link_ccore() {
         &vcpkg_install_dir,
     );
 
-    // run cmake configure
     let status = std::process::Command::new("cmake")
         .current_dir(&cpp_root)
         .arg(format!("--preset={}", cmake_presets.configure))
@@ -70,7 +68,6 @@ fn build_and_link_ccore() {
         panic!("failed to run cmake configure");
     }
 
-    // Build only ccore (--target overrides the preset's default ALL target)
     let status = std::process::Command::new("cmake")
         .current_dir(&cpp_root)
         .arg("--build")
@@ -83,25 +80,19 @@ fn build_and_link_ccore() {
         panic!("failed to run cmake build");
     }
 
-    // Install using the install preset (targets: ["install"])
     let status = std::process::Command::new("cmake")
         .current_dir(&cpp_root)
         .arg("--build")
         .arg(format!("--preset={}", cmake_presets.install))
         .status()
-        .expect("failed to run cmake install"); 
+        .expect("failed to run cmake install");
 
     if !status.success() {
         panic!("failed to run cmake install");
     }
-
-    let pkg_config_dir = get_pkg_config_dir(&cmake_install_dir, target_build_profile);
-
-    emit_pkg_config_link_data(&pkg_config_dir); // emit the link data to the cargo build script
-    
 }
 
-fn build_and_link_ccore_cxxbridge() {
+fn build_ccore_cxxbridge() {
     let cargo_out_dir = get_cargo_out_dir();
     let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
     let mut build = cxx_build::bridge("src/lib.rs");
@@ -109,7 +100,21 @@ fn build_and_link_ccore_cxxbridge() {
     build.compile("ccore_bridge_cxx");
 }
 
+fn emit_ccore_link_data() {
+    let target_build_profile = get_cargo_target_build_profile();
+    let cargo_out_dir = get_cargo_out_dir();
+    let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
+    let pkg_config_dir = get_pkg_config_dir(&cmake_install_dir, target_build_profile);
+    emit_pkg_config_link_data(&pkg_config_dir);
+}
+
 fn main() {
-    build_and_link_ccore();
-    build_and_link_ccore_cxxbridge();
+    // Order matters for Linux static linking: the linker processes libraries
+    // left-to-right and discards symbols not yet referenced. We must emit
+    // link directives so that -lccore_bridge_cxx (which references rg::add_cpp)
+    // appears before -lccore (which defines it). MSVC rescans all libraries
+    // so order is irrelevant there, but this ordering is correct for both.
+    build_ccore();
+    build_ccore_cxxbridge();
+    emit_ccore_link_data();
 }
