@@ -1,4 +1,4 @@
 
 [workspace]
-members = ["src/rcore", "src/ccore_bridge"]
+members = ["src/rcore", "src/ccore_bridge", "src/rerun_playground"]
 resolver = "3"
