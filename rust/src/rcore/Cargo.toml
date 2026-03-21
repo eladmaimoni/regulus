@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-cxx = "1.0.194"
-tracing = "0.1.44"
-tracing-perfetto = "0.1.5"
-tracing-subscriber = "0.3.23"
+cxx.workspace = true
+tracing.workspace = true
+tracing-perfetto.workspace = true
+tracing-subscriber.workspace = true
 
 [build-dependencies]
-cxx-build = "1.0.194"
+cxx-build.workspace = true
 
 [lib]
 crate-type = ["lib", "staticlib"]
