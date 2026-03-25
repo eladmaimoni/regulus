@@ -41,8 +41,8 @@ pub fn get_repository_root() -> std::path::PathBuf {
     let manifest_dir = std::path::PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
     manifest_dir
         .ancestors()
-        .nth(3)
-        .expect("ccore_bridge must live at rust/src/ccore_bridge under the workspace root")
+        .nth(2)
+        .expect("ccore_bridge must live at rust/ccore_bridge under the workspace root")
         .to_path_buf()
 }
 

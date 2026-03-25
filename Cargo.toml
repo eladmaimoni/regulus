@@ -1,6 +1,6 @@
 
 [workspace]
-members = ["rust/src/rcore", "rust/src/ccore_bridge", "rust/src/rerun_playground"]
+members = ["rust/rcore", "rust/ccore_bridge", "rust/rerun_playground"]
 resolver = "3"
 
 [workspace.dependencies]

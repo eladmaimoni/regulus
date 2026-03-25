@@ -6,7 +6,7 @@ function(import_rcore_target)
     )
     FetchContent_MakeAvailable(Corrosion)
 
-    corrosion_import_crate(MANIFEST_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../rust/src/rcore/Cargo.toml)
+    corrosion_import_crate(MANIFEST_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../rust/rcore/Cargo.toml)
     if(NOT TARGET rcore)
         message(FATAL_ERROR "rcore target not found")
     endif()
