@@ -87,7 +87,7 @@ fn build_ccore() {
         .arg(format!("--preset={}", cmake_presets.build))
         .arg("--target=install")
         .status()
-        .expect("failed to run cmake build");
+        .expect("failed to run cmake install");
 
     if !status.success() {
         panic!("failed to run cmake install");

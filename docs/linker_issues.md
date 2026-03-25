@@ -68,19 +68,24 @@ if(MSVC)
     string(FIND "${CMAKE_MSVC_RUNTIME_LIBRARY}" "DLL" _is_dynamic_crt)
     if(NOT _is_dynamic_crt EQUAL -1)
         corrosion_set_env_vars(rcore
-            "CFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
-            "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
+            "CFLAGS_x86_64_pc_windows_msvc=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
+            "CXXFLAGS_x86_64_pc_windows_msvc=$<IF:$<CONFIG:Debug>,/MDd,/MD>"
         )
     else()
         corrosion_set_env_vars(rcore
-            "CFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
-            "CXXFLAGS=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
+            "CFLAGS_x86_64_pc_windows_msvc=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
+            "CXXFLAGS_x86_64_pc_windows_msvc=$<IF:$<CONFIG:Debug>,/MTd,/MT>"
         )
     endif()
 endif()
 ```
 
-This uses generator expressions so the correct flag is applied per build configuration
+The env vars use the target-qualified name (`CFLAGS_x86_64_pc_windows_msvc`) so they take
+precedence over any plain `CFLAGS` that `.cargo/config.toml` might set via its `[env]` table.
+The `cc` crate checks `CFLAGS_<target>` before `CFLAGS`
+([docs](https://docs.rs/cc/latest/cc/#external-configuration-via-environment-variables)).
+
+Generator expressions select the correct flag per build configuration
 (Debug vs Release) in multi-config generators like Visual Studio.
 
 ### Windows system library dependencies
@@ -90,11 +95,13 @@ are not automatically linked. You must add them explicitly:
 
 ```cmake
 if(WIN32)
-    target_link_libraries(rcore INTERFACE bcrypt advapi32)
+    target_link_libraries(rcore INTERFACE bcrypt)
 endif()
 ```
 
 Common system libraries Rust crates may need: `bcrypt`, `advapi32`, `userenv`, `ws2_32`, `ntdll`.
+Add only the ones actually required — Cargo's linker resolves these automatically for Rust
+executables, but they must be listed explicitly when a C++ target links the Rust staticlib.
 
 ### Requirements
 

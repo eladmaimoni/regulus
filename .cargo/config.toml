@@ -3,7 +3,7 @@
 # Default config is optimised for debug builds (`cargo test`, `cargo build`,
 # `cargo check`) so they just work without extra flags.
 #
-# For release builds use the aliases: `cargo xbuild-release`, `cargo xtest-release`.
+# For release builds use the aliases: `cargo rbuild`, `cargo rtest`.
 # These override rustflags and CFLAGS to use the release CRT (/MT + libcmt).
 #
 # +crt-static tells Rust to link the static CRT (/MT family).
