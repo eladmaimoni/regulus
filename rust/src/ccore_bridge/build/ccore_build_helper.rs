@@ -22,7 +22,6 @@ pub enum TargetBuildProfile {
 pub struct CMakePresets {
     pub(crate) configure: &'static str,
     pub(crate) build: &'static str,
-    pub(crate) install: &'static str,
 }
 
 pub const CMAKE_INSTALLED_DIR: &str = "installed";
@@ -77,37 +76,31 @@ pub fn get_cargo_target_build_profile() -> TargetBuildProfile {
 const WINDOWS_DEFAULT_DEBUG_PRESET: CMakePresets = CMakePresets {
     configure: "msvc-mt",
     build: "msvc-mt-debug",
-    install: "msvc-mt-debug-install",
 };
 
 const WINDOWS_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
     configure: "msvc-mt",
     build: "msvc-mt-release",
-    install: "msvc-mt-release-install",
 };
 
 const LINUX_DEFAULT_DEBUG_PRESET: CMakePresets = CMakePresets {
     configure: "clang-20-debug",
     build: "clang-20-debug",
-    install: "clang-20-debug-install",
 };
 
 const LINUX_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
     configure: "clang-20-release",
     build: "clang-20-release",
-    install: "clang-20-release-install",
 };
 
 const LINUX_AARCH64_DEBUG_PRESET: CMakePresets = CMakePresets {
     configure: "clang-20-aarch64-debug",
     build: "clang-20-aarch64-debug",
-    install: "clang-20-aarch64-debug-install",
 };
 
 const LINUX_AARCH64_RELEASE_PRESET: CMakePresets = CMakePresets {
     configure: "clang-20-aarch64-release",
     build: "clang-20-aarch64-release",
-    install: "clang-20-aarch64-release-install",
 };
 
 pub fn get_cmake_presets(

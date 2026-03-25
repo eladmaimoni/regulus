@@ -62,7 +62,6 @@ fn build_ccore() {
             "-DVCPKG_INSTALLED_DIR={}",
             vcpkg_install_dir.display().to_string()
         ))
-        .arg("-DREGULUS_WITH_TESTS=OFF")
         .status()
         .expect("failed to run cmake configure");
 
@@ -85,9 +84,10 @@ fn build_ccore() {
     let status = std::process::Command::new("cmake")
         .current_dir(&project_root)
         .arg("--build")
-        .arg(format!("--preset={}", cmake_presets.install))
+        .arg(format!("--preset={}", cmake_presets.build))
+        .arg("--target=install")
         .status()
-        .expect("failed to run cmake install");
+        .expect("failed to run cmake build");
 
     if !status.success() {
         panic!("failed to run cmake install");

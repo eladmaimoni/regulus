@@ -110,42 +110,6 @@
             "configuration": "Debug"
         },
         {
-            "name": "msvc-mt-debug-install",
-            "configurePreset": "msvc-mt",
-            "jobs": 0,
-            "configuration": "Debug",
-            "targets": [
-                "install"
-            ]
-        },
-        {
-            "name": "msvc-mt-release-install",
-            "configurePreset": "msvc-mt",
-            "jobs": 0,
-            "configuration": "RelWithDebInfo",
-            "targets": [
-                "install"
-            ]
-        },
-        {
-            "name": "msvc-md-debug-install",
-            "configurePreset": "msvc-md",
-            "jobs": 0,
-            "configuration": "RelWithDebInfo",
-            "targets": [
-                "install"
-            ]
-        },
-        {
-            "name": "msvc-md-release-install",
-            "configurePreset": "msvc-md",
-            "jobs": 0,
-            "configuration": "RelWithDebInfo",
-            "targets": [
-                "install"
-            ]
-        },
-        {
             "name": "clang-20-release",
             "configurePreset": "clang-20-release",
             "jobs": 0
@@ -154,22 +118,6 @@
             "name": "clang-20-debug",
             "configurePreset": "clang-20-debug",
             "jobs": 0
-        },
-        {
-            "name": "clang-20-release-install",
-            "configurePreset": "clang-20-release",
-            "jobs": 0,
-            "targets": [
-                "install"
-            ]
-        },
-        {
-            "name": "clang-20-debug-install",
-            "configurePreset": "clang-20-debug",
-            "jobs": 0,
-            "targets": [
-                "install"
-            ]
         },
         {
             "name": "clang-20-aarch64-release",
@@ -188,15 +136,8 @@
             "targets": [
                 "install"
             ]
-        },
-        {
-            "name": "clang-20-aarch64-debug-install",
-            "configurePreset": "clang-20-aarch64-debug",
-            "jobs": 0,
-            "targets": [
-                "install"
-            ]
         }
+
     ],
     "testPresets": [
         {
@@ -256,7 +197,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "msvc-md-release-install"
+                    "name": "msvc-md-release"
                 }
             ]
         },
@@ -269,7 +210,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "msvc-mt-debug-install"
+                    "name": "msvc-mt-debug"
                 }
             ]
         },
@@ -282,7 +223,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-release-install"
+                    "name": "clang-20-release"
                 }
             ]
         },
@@ -295,7 +236,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-debug-install"
+                    "name": "clang-20-debug"
                 }
             ]
         },
@@ -308,7 +249,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-aarch64-release-install"
+                    "name": "clang-20-aarch64-release"
                 }
             ]
         },
@@ -321,7 +262,7 @@
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-aarch64-debug-install"
+                    "name": "clang-20-aarch64-debug"
                 }
             ]
         }
