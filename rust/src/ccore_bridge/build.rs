@@ -38,6 +38,7 @@ fn build_ccore() {
     let target_build_profile = get_cargo_target_build_profile();
     let cmake_presets = get_cmake_presets(target_os, target_arch, target_build_profile);
     let cpp_root = get_cpp_project_root_directory();
+    let project_root = get_repository_root();
 
     let cargo_out_dir = get_cargo_out_dir();
     let cmake_install_dir = cargo_out_dir.join(CMAKE_INSTALLED_DIR);
@@ -51,7 +52,7 @@ fn build_ccore() {
     );
 
     let status = std::process::Command::new("cmake")
-        .current_dir(&cpp_root)
+        .current_dir(&project_root)
         .arg(format!("--preset={}", cmake_presets.configure))
         .arg(format!(
             "-DCMAKE_INSTALL_PREFIX={}",
@@ -61,6 +62,7 @@ fn build_ccore() {
             "-DVCPKG_INSTALLED_DIR={}",
             vcpkg_install_dir.display().to_string()
         ))
+        .arg("-DREGULUS_WITH_TESTS=OFF")
         .status()
         .expect("failed to run cmake configure");
 
@@ -69,7 +71,7 @@ fn build_ccore() {
     }
 
     let status = std::process::Command::new("cmake")
-        .current_dir(&cpp_root)
+        .current_dir(&project_root)
         .arg("--build")
         .arg(format!("--preset={}", cmake_presets.build))
         .arg("--target=ccore")
@@ -81,7 +83,7 @@ fn build_ccore() {
     }
 
     let status = std::process::Command::new("cmake")
-        .current_dir(&cpp_root)
+        .current_dir(&project_root)
         .arg("--build")
         .arg(format!("--preset={}", cmake_presets.install))
         .status()

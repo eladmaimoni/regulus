@@ -1,8 +1,4 @@
-
-cmake_minimum_required(VERSION 4.3.0)
-
 set(LOG_SEPARATOR "===============================================================")
-project(regulus)
 message(STATUS "${LOG_SEPARATOR}")
 message(STATUS "Project: ${PROJECT_NAME}")
 message(STATUS "${LOG_SEPARATOR}")

@@ -37,22 +37,18 @@ pub fn get_target_os(target_os: &str) -> TargetOS {
     }
 }
 
+/// Returns the repository root (directory containing `Cargo.toml` and `CMakePresets.json`).
 pub fn get_repository_root() -> std::path::PathBuf {
-    let current_directory = std::env::current_dir().unwrap(); // the build script’s current directory is the source directory of the build script’s package
-
-    // Determine workspace root (two levels up from this crate: .../src/app)
-    // let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
-    current_directory
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
+    let manifest_dir = std::path::PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
+    manifest_dir
+        .ancestors()
+        .nth(3)
+        .expect("ccore_bridge must live at rust/src/ccore_bridge under the workspace root")
         .to_path_buf()
 }
 
-
 pub fn get_cpp_project_root_directory() -> std::path::PathBuf {
-    get_repository_root().parent().unwrap().join("cpp")
+    get_repository_root().join("cpp")
 }
 
 pub fn get_cargo_out_dir() -> std::path::PathBuf {
