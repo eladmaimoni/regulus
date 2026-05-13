@@ -6,7 +6,7 @@ macro(append_flag_if_not_found var flag)
     endif()
 endmacro()
 
-set(CMAKE_C_COMPILER clang-20)
+set(CMAKE_C_COMPILER clang-22)
 set(CMAKE_CXX_COMPILER clang++-20)
 
 # append_flag_if_not_found(CMAKE_CXX_FLAGS_INIT "-stdlib=libc++") #using libc++ instead of libstdc++ causes compilation error in boost-system

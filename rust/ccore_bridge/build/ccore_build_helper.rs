@@ -84,23 +84,23 @@ const WINDOWS_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
 };
 
 const LINUX_DEFAULT_DEBUG_PRESET: CMakePresets = CMakePresets {
-    configure: "clang-20-debug",
-    build: "clang-20-debug",
+    configure: "clang-22-debug",
+    build: "clang-22-debug",
 };
 
 const LINUX_DEFAULT_RELEASE_PRESET: CMakePresets = CMakePresets {
-    configure: "clang-20-release",
-    build: "clang-20-release",
+    configure: "clang-22-release",
+    build: "clang-22-release",
 };
 
 const LINUX_AARCH64_DEBUG_PRESET: CMakePresets = CMakePresets {
-    configure: "clang-20-aarch64-debug",
-    build: "clang-20-aarch64-debug",
+    configure: "clang-22-aarch64-debug",
+    build: "clang-22-aarch64-debug",
 };
 
 const LINUX_AARCH64_RELEASE_PRESET: CMakePresets = CMakePresets {
-    configure: "clang-20-aarch64-release",
-    build: "clang-20-aarch64-release",
+    configure: "clang-22-aarch64-release",
+    build: "clang-22-aarch64-release",
 };
 
 pub fn get_cmake_presets(

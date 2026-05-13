@@ -65,10 +65,10 @@ chmod +x llvm.sh
 sudo ./llvm.sh 22
 ```
 
-Set clang-20 as the default:
+Set clang-22 as the default:
 
 ```bash
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
 sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
 ```
 

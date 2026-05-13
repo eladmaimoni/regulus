@@ -36,11 +36,11 @@
             }
         },
         {
-            "name": "clang-20-release",
+            "name": "clang-22-release",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
-                "clang-20",
+                "clang-22",
                 "ninja"
             ],
             "cacheVariables": {
@@ -48,11 +48,11 @@
             }
         },
         {
-            "name": "clang-20-debug",
+            "name": "clang-22-debug",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
-                "clang-20",
+                "clang-22",
                 "ninja"
             ],
             "cacheVariables": {
@@ -60,11 +60,11 @@
             }
         },
         {
-            "name": "clang-20-aarch64-release",
+            "name": "clang-22-aarch64-release",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
-                "clang-20-aarch64",
+                "clang-22-aarch64",
                 "ninja"
             ],
             "cacheVariables": {
@@ -72,11 +72,11 @@
             }
         },
         {
-            "name": "clang-20-aarch64-debug",
+            "name": "clang-22-aarch64-debug",
             "inherits": [
                 "basic_paths",
                 "vcpkg",
-                "clang-20-aarch64",
+                "clang-22-aarch64",
                 "ninja"
             ],
             "cacheVariables": {
@@ -110,28 +110,28 @@
             "configuration": "Debug"
         },
         {
-            "name": "clang-20-release",
-            "configurePreset": "clang-20-release",
+            "name": "clang-22-release",
+            "configurePreset": "clang-22-release",
             "jobs": 0
         },
         {
-            "name": "clang-20-debug",
-            "configurePreset": "clang-20-debug",
+            "name": "clang-22-debug",
+            "configurePreset": "clang-22-debug",
             "jobs": 0
         },
         {
-            "name": "clang-20-aarch64-release",
-            "configurePreset": "clang-20-aarch64-release",
+            "name": "clang-22-aarch64-release",
+            "configurePreset": "clang-22-aarch64-release",
             "jobs": 0
         },
         {
-            "name": "clang-20-aarch64-debug",
-            "configurePreset": "clang-20-aarch64-debug",
+            "name": "clang-22-aarch64-debug",
+            "configurePreset": "clang-22-aarch64-debug",
             "jobs": 0
         },
         {
-            "name": "clang-20-aarch64-release-install",
-            "configurePreset": "clang-20-aarch64-release",
+            "name": "clang-22-aarch64-release-install",
+            "configurePreset": "clang-22-aarch64-release",
             "jobs": 0,
             "targets": [
                 "install"
@@ -173,15 +173,15 @@
             }
         },
         {
-            "name": "clang-20-debug",
-            "configurePreset": "clang-20-debug",
+            "name": "clang-22-debug",
+            "configurePreset": "clang-22-debug",
             "output": {
                 "outputOnFailure": true
             }
         },
         {
-            "name": "clang-20-release",
-            "configurePreset": "clang-20-release",
+            "name": "clang-22-release",
+            "configurePreset": "clang-22-release",
             "output": {
                 "outputOnFailure": true
             }
@@ -219,11 +219,11 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "clang-20-release"
+                    "name": "clang-22-release"
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-release"
+                    "name": "clang-22-release"
                 }
             ]
         },
@@ -232,11 +232,11 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "clang-20-debug"
+                    "name": "clang-22-debug"
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-debug"
+                    "name": "clang-22-debug"
                 }
             ]
         },
@@ -245,11 +245,11 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "clang-20-aarch64-release"
+                    "name": "clang-22-aarch64-release"
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-aarch64-release"
+                    "name": "clang-22-aarch64-release"
                 }
             ]
         },
@@ -258,11 +258,11 @@
             "steps": [
                 {
                     "type": "configure",
-                    "name": "clang-20-aarch64-debug"
+                    "name": "clang-22-aarch64-debug"
                 },
                 {
                     "type": "build",
-                    "name": "clang-20-aarch64-debug"
+                    "name": "clang-22-aarch64-debug"
                 }
             ]
         }
