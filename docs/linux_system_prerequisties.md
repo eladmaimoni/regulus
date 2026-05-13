@@ -1,34 +1,41 @@
 # Linux / WSL System Prerequisites
 
-## Rust
+```
+sudo apt update
+sudo apt install ca-certificates gpg wget
+```
+# CMake 
 
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+Note that by default apt will install an old version of cmake.
+we need to tweak it so it will install version 4.3.0 or above.
+
+[ask ubuntu](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line)
+
+
+1. add kitware GPG key
+```
+wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
 ```
 
-To update an existing installation:
-
-```bash
-rustup update
+2. Add kitware's repository to your sources list and update
+Note that this command is specific for ubuntu 24.04
+```
+echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ noble main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
+sudo apt update
 ```
 
-## Clang 20
-
-```bash
-sudo apt update && sudo apt install clang
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh 20
+3. install
+```
+sudo apt install cmake
 ```
 
-Set clang-20 as the default:
+4. verify cmake has the desired version
 
-```bash
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
+```
+cmake --version
 ```
 
-## vcpkg
+# vcpkg
 
 ```bash
 git clone https://github.com/microsoft/vcpkg.git ~/workspace/vcpkg
@@ -49,6 +56,37 @@ Then reload:
 ```bash
 source ~/.bashrc
 ```
+
+# Clang 22
+
+```bash
+wget https://apt.llvm.org/llvm.sh
+chmod +x llvm.sh
+sudo ./llvm.sh 22
+```
+
+Set clang-20 as the default:
+
+```bash
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
+```
+
+# Rust
+
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+To update an existing installation:
+
+```bash
+rustup update
+```
+
+
+
+
 
 
 # Linux Cross Compilation for ARM 
