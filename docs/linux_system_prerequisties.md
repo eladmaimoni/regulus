@@ -2,7 +2,8 @@
 
 ```
 sudo apt update
-sudo apt install ca-certificates gpg wget
+sudo apt install ca-certificates gpg wget ninja-build -y
+
 ```
 # CMake 
 
@@ -65,17 +66,17 @@ chmod +x llvm.sh
 sudo ./llvm.sh 22
 ```
 
-Set clang-22 as the default:
+Set clang-22 as the default (optional):
 
 ```bash
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-22 100
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-22 100
 ```
 
 # Rust
 
 ```
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```
 
 To update an existing installation:
