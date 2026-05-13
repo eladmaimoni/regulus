@@ -99,10 +99,18 @@ sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 ## to run the resulting aarch64 binaries for testing
 ```
-home apt install qemu-user
+sudo apt install qemu-user
 ```
 
 ## add rust target
 ```
 rustup target add aarch64-unknown-linux-gnu
 ```
+
+
+# Testing
+This will call a rust code that calls C++ code and calls rust code again, and test the results
+
+- testing native x64 debug build: `cargo test --debug`
+- testing native x64 release build: `cargo test --release`
+- testing arm64 on x64 machine using qemu emulator using the emulator `cargo test --release --target aarch64-unknown-linux-gnu`
